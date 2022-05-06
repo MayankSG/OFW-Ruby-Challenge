@@ -1,0 +1,23 @@
+#!/bin/env ruby
+
+require_relative 'generator.rb'
+
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: generate.rb [options]"
+
+  opts.on("-uNUM_USERS", "--users=NUM_USERS", Integer, "Number of users") do |v|
+    options[:num_users] = v
+  end
+
+  opts.on("-eNUM_EVENTS", "--events=NUM_EVENTS", "Number of events (positive integer or 'infinite'") do |v|
+    options[:num_events] = v == 'infinite' ? :infinite : v.to_i
+  end
+end.parse!
+
+gen = Generator.new(num_events: options[:num_events], num_users: options[:num_users])
+while (ev = gen.next)
+  puts ev
+end

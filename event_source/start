@@ -1,0 +1,13 @@
+#!/bin/env ruby
+
+# frozen_string_literal: true
+
+require_relative 'event_source.rb'
+
+s = EventSource.new(debug: true, num_users: 15, infinite: false)
+pid = Process.fork do
+  s.start
+end
+
+trap("SIGINT") { Process.kill("SIGINT", pid) }
+Process.wait
